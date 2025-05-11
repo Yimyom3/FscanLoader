@@ -1,1 +1,117 @@
 # FscanLoader
+
+一个用于绕过杀软加载fscan的加载器
+## 实现
+
++ 使用CGO技术将fscan项目编译成dll，并链接反射式加载静态库
++ loader动态获取所需API，寻找dll的反射式加载入口，完成fscan的加载
+
+## 编译
+1. 确保已安装MSVC、GCC(MinGW64)、Go环境
+2. 拉取fscan项目
+   ```bash
+   git clone https://github.com/shadow1ng/fscan.git
+   ```
+3. 将fscan项目的main.go替换为以下内容
+   ```Go
+   package main
+    
+    /*
+    #cgo LDFLAGS: -L${SRCDIR}/lib -lreflective
+    void DllInit();
+    */
+    import "C"
+    import (
+    	"fmt"
+    	"os"
+    
+    	"github.com/shadow1ng/fscan/Common"
+    	"github.com/shadow1ng/fscan/Core"
+    )
+    
+    //export DllRegisterServer
+    func DllRegisterServer() {}
+    
+    func init() {
+    	C.DllInit() //注册接受退出信号的回调函数
+    	Common.InitLogger()
+    	var Info Common.HostInfo
+    	Common.Flag(&Info)
+    	if err := Common.Parse(&Info); err != nil {
+    		os.Exit(1)
+    	}
+    	// 初始化输出系统，如果失败则直接退出
+    	if err := Common.InitOutput(); err != nil {
+    		Common.LogError(fmt.Sprintf("初始化输出系统失败: %v", err))
+    		os.Exit(1) // 关键修改：初始化失败时直接退出
+    	}
+    	defer Common.CloseOutput()
+    	Core.Scan(Info)
+    }
+    
+    func main() {}
+   ```
+  4. 在fscan项目下的/Common/Flag.go的Flag函数(58行)中添加以下代码
+     ```Go
+     //加载器参数兼容
+     flag.Bool("fl", false, "从文件中加载fscan(默认model.bin)")
+     flag.Bool("ul", false, "从URL中加载fscan")
+     flag.Bool("xk", false, "设置加载fscan的xor密钥")
+     ```
+ 5. 在fscan项目下新建lib目录，并添加reflective.h和reflective.c文件,执行命令生成libreflective.a文件
+    ```shell
+    gcc -O0 -c -o libreflective.a reflective.c
+    ```
+ 6. 在fscan项目下执行命令生成fscan.dll文件，将fscan.dll的第3、4、5、6字节内容都修改为 **0x90**
+    ```shell
+    go build -buildmode=c-shared -ldflags="-w -s" -o fscan.dll 
+    ```
+    ![image](https://github.com/user-attachments/assets/3aaddeca-cc6a-4d6a-aeaa-b97cf06111f6)
+
+ 7. 使用visual studio打开FscanLoader项目，选择x64架构，一键编译即可
+
+## 使用方法
+
++ 使用 **-fl**参数从文件中加载，如果不提供参数值，则默认从当前目录下的 **model.bin**中加载
+  ![file](https://github.com/user-attachments/assets/3d193620-188b-4840-a21d-40a0c4cf5fde)
+
++ 使用 **-ul**参数从 **URL** 加载
+  ![image](https://github.com/user-attachments/assets/e4d4390f-c39f-4584-be6c-8e40c50121be)
+
++ 支持对加载内容进行xor解密，使用 **-xk** 参数指定xor密钥
+  ![url](https://github.com/user-attachments/assets/5303c4b5-6576-452f-aec7-09be0fbb336c)
+  ![image](https://github.com/user-attachments/assets/6ef5b8df-f917-46da-8fa6-5f148982f994)
+
+> 其余参数和fscan一致
+
+## 效果
++ 微步云沙箱
+  ![wb](https://github.com/user-attachments/assets/38960b84-6c01-469b-be52-39f7c1e824b8)
++ vt
++ 360核晶
++ 火绒
++ Windows Defender
+
+## 注意事项
+
++ 使用gcc编译静态库时一定要加 **-O0** 参数关闭编译器优化
++ go build 命令务必添加 **-ldflags="-w -s**"参数来缩小dll的体积
++ 仅在x86_64环境上测试，如需其他环境，请自行编译和验证
+
+## 参考
+
+[https://mp.weixin.qq.com/s/b0mphQG-nny0X087JsjsKQ](https://mp.weixin.qq.com/s/Yuk7Ev_JP8JAf_8uvIhdVw)
+
+https://github.com/shadow1ng/fscan
+
+## 免责声明
+
+(1) 本项目仅用于网络安全技术的学习研究。旨在提高安全开发能力，研发新的攻防技术。
+
+(2) 若执意要将本项目用于渗透测试等安全业务，需先确保已获得足够的法律授权，在符合网络安全法的条件下进行。
+
+(3) 本项目由个人独立开发，暂未做全面的软件测试，请使用者在虚拟环境中测试本项目功能。
+
+(4) 本项目完全开源，请勿将本项目用于任何商业用途。
+
+(5) 若使用者在使用本项目的过程中存在任何违法行为或造成任何不良影响，需使用者自行承担责任，与项目作者无关。
