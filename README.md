@@ -73,22 +73,26 @@
 ## 使用方法
 
 + 使用 **-fl**参数从文件中加载，如果不提供参数值，则默认从当前目录下的 **model.bin**中加载
-  ![file](https://github.com/user-attachments/assets/3d193620-188b-4840-a21d-40a0c4cf5fde)
+  ![image](https://github.com/user-attachments/assets/c0b6b118-5091-45a5-95b1-224ed6ed87bc)
 
 + 使用 **-ul**参数从 **URL** 加载
-  ![image](https://github.com/user-attachments/assets/e4d4390f-c39f-4584-be6c-8e40c50121be)
+  ![url](https://github.com/user-attachments/assets/392813b9-1b4a-4b1a-bab6-844faf9e5af9)
+
 
 + 支持对加载内容进行xor解密，使用 **-xk** 参数指定xor密钥
-  ![url](https://github.com/user-attachments/assets/5303c4b5-6576-452f-aec7-09be0fbb336c)
-  ![image](https://github.com/user-attachments/assets/6ef5b8df-f917-46da-8fa6-5f148982f994)
+  ![image](https://github.com/user-attachments/assets/8d2cc6e5-4565-430a-bdbb-25c36163faec)
+  ![image](https://github.com/user-attachments/assets/94063a1d-d686-404f-9f55-d2351dc53629)
+
 
 > 其余参数和fscan一致
 
 ## 效果
 + 微步云沙箱
-  ![wb](https://github.com/user-attachments/assets/38960b84-6c01-469b-be52-39f7c1e824b8)
+  ![image](https://github.com/user-attachments/assets/0aa335c5-162d-45cf-9a04-24ab368f68df)
+
 + vt
 + 360核晶
+  
 + 火绒
 + Windows Defender
 
