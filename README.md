@@ -58,7 +58,7 @@
      flag.Bool("ul", false, "从URL中加载fscan")
      flag.Bool("xk", false, "设置加载fscan的xor密钥")
      ```
- 5. 在fscan项目下新建lib目录，并添加reflective.h和reflective.c文件,执行命令生成libreflective.a文件
+ 5. 将本项目的lib目录拷贝到fscan项目下，执行命令生成libreflective.a文件
     ```shell
     gcc -O0 -c -o libreflective.a reflective.c
     ```
