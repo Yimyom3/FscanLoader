@@ -68,7 +68,7 @@
     ```
     ![image](https://github.com/user-attachments/assets/3aaddeca-cc6a-4d6a-aeaa-b97cf06111f6)
 
- 7. 使用visual studio打开FscanLoader项目，选择x64架构，一键编译即可
+ 7. 使用Visual Studio打开FscanLoader项目，选择x64架构，一键编译即可
 
 ## 使用方法
 
@@ -92,9 +92,14 @@
 
 + vt
 + 360核晶
-  
+  ![360](https://github.com/user-attachments/assets/1cc5a1d7-6ab8-4a16-a3ef-afe026fd21b3)
+
 + 火绒
+  ![image](https://github.com/user-attachments/assets/a14eacc5-96b1-44cd-87ed-ded8eb67d73e)
+
 + Windows Defender
+  ![Snipaste_2025-05-11_20-09-50](https://github.com/user-attachments/assets/aaf919e0-a613-4fea-81a4-6e26499f5311)
+
 
 ## 注意事项
 
